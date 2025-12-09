@@ -45,6 +45,7 @@ Future<void> initDependencies() async {
       signOutUseCase: sl(),
       getCurrentUserUseCase: sl(),
       sendPasswordResetUseCase: sl(),
+      updatePasswordUseCase: sl(),
       authRepository: sl(),
     ),
   );

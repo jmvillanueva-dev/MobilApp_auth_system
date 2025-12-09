@@ -6,6 +6,7 @@ import '../../domain/usecases/sign_in_usecase.dart';
 import '../../domain/usecases/sign_out_usecase.dart';
 import '../../domain/usecases/get_current_user_usecase.dart';
 import '../../domain/usecases/send_password_reset_usecase.dart';
+import '../../domain/usecases/update_password_usecase.dart';
 import '../../domain/repositories/auth_repository.dart';
 import 'auth_event.dart';
 import 'auth_state.dart';
@@ -16,6 +17,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final SignOutUseCase signOutUseCase;
   final GetCurrentUserUseCase getCurrentUserUseCase;
   final SendPasswordResetUseCase sendPasswordResetUseCase;
+  final UpdatePasswordUseCase updatePasswordUseCase;
   final AuthRepository authRepository;
   StreamSubscription? _authStateSubscription;
 
@@ -25,6 +27,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     required this.signOutUseCase,
     required this.getCurrentUserUseCase,
     required this.sendPasswordResetUseCase,
+    required this.updatePasswordUseCase,
     required this.authRepository,
   }) : super(const AuthInitial()) {
     on<AuthCheckRequested>(_onAuthCheckRequested);
@@ -32,6 +35,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthSignInRequested>(_onSignInRequested);
     on<AuthSignOutRequested>(_onSignOutRequested);
     on<AuthPasswordResetRequested>(_onPasswordResetRequested);
+    on<AuthUpdatePasswordRequested>(_onUpdatePasswordRequested);
     _listenToAuthState();
   }
 
@@ -69,7 +73,69 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     );
   }
 
-  // Implementar el resto de los handlers...
+  Future<void> _onSignUpRequested(
+    AuthSignUpRequested event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(const AuthLoading(message: 'Creando cuenta...'));
+    final result = await signUpUseCase(
+      SignUpParams(
+        email: event.email,
+        password: event.password,
+        fullName: event.fullName,
+      ),
+    );
+    result.fold(
+      (failure) => emit(AuthError(message: failure.message)),
+      (user) => emit(AuthSignUpSuccess(
+        email: user.email,
+        requiresEmailConfirmation: !user.emailConfirmed,
+      )),
+    );
+  }
+
+  Future<void> _onSignOutRequested(
+    AuthSignOutRequested event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(const AuthLoading(message: 'Cerrando sesión...'));
+    final result = await signOutUseCase(const NoParams());
+    result.fold(
+      (failure) => emit(AuthError(message: failure.message)),
+      (_) => emit(const AuthUnauthenticated()),
+    );
+  }
+
+  Future<void> _onPasswordResetRequested(
+    AuthPasswordResetRequested event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(const AuthLoading(message: 'Enviando enlace de recuperación...'));
+    final result = await sendPasswordResetUseCase(
+      SendPasswordResetParams(email: event.email),
+    );
+    result.fold(
+      (failure) => emit(AuthError(message: failure.message)),
+      (_) => emit(AuthPasswordResetSent(email: event.email)),
+    );
+  }
+
+  Future<void> _onUpdatePasswordRequested(
+    AuthUpdatePasswordRequested event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(const AuthLoading(message: 'Actualizando contraseña...'));
+    final result = await updatePasswordUseCase(
+      UpdatePasswordParams(
+        currentPassword: event.currentPassword,
+        newPassword: event.newPassword,
+      ),
+    );
+    result.fold(
+      (failure) => emit(AuthError(message: failure.message)),
+      (_) => emit(const AuthPasswordUpdateSuccess()),
+    );
+  }
 
   @override
   Future<void> close() {

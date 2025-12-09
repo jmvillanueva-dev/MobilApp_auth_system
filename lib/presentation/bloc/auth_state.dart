@@ -55,3 +55,7 @@ class AuthSignUpSuccess extends AuthState {
   @override
   List<Object?> get props => [email, requiresEmailConfirmation];
 }
+
+class AuthPasswordUpdateSuccess extends AuthState {
+  const AuthPasswordUpdateSuccess();
+}
