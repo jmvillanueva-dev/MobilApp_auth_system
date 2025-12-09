@@ -1,0 +1,16 @@
+class UserEntity extends Equatable {
+  final String id;
+  final String email;
+  final String? fullName;
+  final bool emailConfirmed;
+
+  const UserEntity({
+    required this.id,
+    required this.email,
+    this.fullName,
+    required this.emailConfirmed,
+  });
+
+  @override
+  List<Object?> get props => [id, email, fullName, emailConfirmed];
+}
