@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'core/theme/app_theme.dart';
-import 'features/auth/presentation/bloc/auth_bloc.dart';
-import 'features/auth/presentation/pages/splash_page.dart';
+import 'presentation/bloc/auth_bloc.dart';
+import 'presentation/pages/splash_page.dart';
 import 'injection_container.dart' as di;
 
 void main() async {
