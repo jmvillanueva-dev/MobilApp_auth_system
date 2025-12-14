@@ -1,15 +1,15 @@
 import 'package:get_it/get_it.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'features/auth/data/datasources/auth_remote_datasource.dart';
-import 'features/auth/data/repositories/auth_repository_impl.dart';
-import 'features/auth/domain/repositories/auth_repository.dart';
-import 'features/auth/domain/usecases/sign_up_usecase.dart';
-import 'features/auth/domain/usecases/sign_in_usecase.dart';
-import 'features/auth/domain/usecases/sign_out_usecase.dart';
-import 'features/auth/domain/usecases/get_current_user_usecase.dart';
-import 'features/auth/domain/usecases/send_password_reset_usecase.dart';
-import 'features/auth/domain/usecases/update_password_usecase.dart';
-import 'features/auth/presentation/bloc/auth_bloc.dart';
+import 'data/datasources/auth_remote_datasource.dart';
+import 'data/repositories/auth_repository_impl.dart';
+import 'domain/repositories/auth_repository.dart';
+import 'domain/usecases/sign_up_usecase.dart';
+import 'domain/usecases/sign_in_usecase.dart';
+import 'domain/usecases/sign_out_usecase.dart';
+import 'domain/usecases/get_current_user_usecase.dart';
+import 'domain/usecases/send_password_reset_usecase.dart';
+import 'domain/usecases/update_password_usecase.dart';
+import 'presentation/bloc/auth_bloc.dart';
 
 final sl = GetIt.instance;
 
